@@ -1,24 +1,13 @@
 text1 = open("poem.txt", "rb").read()
 
 
+# Importing Gensim
+import gensim
+from gensim import corpora
 
 from nltk.corpus import stopwords 
 from nltk.stem.wordnet import WordNetLemmatizer
 import string
-stop = set(stopwords.words('english'))
-exclude = set(string.punctuation) 
-lemma = WordNetLemmatizer()
-def clean(doc):
-    stop_free = " ".join([i for i in doc.lower().split() if i not in stop])
-    punc_free = ''.join(ch for ch in stop_free if ch not in exclude)
-    normalized = " ".join(lemma.lemmatize(word) for word in punc_free.split())
-    return normalized
-
-doc_clean = [clean(text1).split()]
-
-# Importing Gensim
-import gensim
-from gensim import corpora
 
 
 # Creating the term dictionary of our courpus, where every unique term is assigned an index. 
@@ -26,6 +15,7 @@ from six import iteritems
  # collect statistics about all tokens
 dictionary = corpora.Dictionary(line.lower().split() for line in open('poem.txt'))
  # remove stop words and words that appear only once
+stop = set(stopwords.words('english'))
 stop_ids = [dictionary.token2id[stopword] for stopword in stop
             if stopword in dictionary.token2id]
 once_ids = [tokenid for tokenid, docfreq in iteritems(dictionary.dfs) if docfreq == 1]
